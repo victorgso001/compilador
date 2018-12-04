@@ -1,0 +1,3 @@
+<corpo> -> <declarações><comando-composto>
+<declarações> -> <declaração>;|<declaração><declarações>|<vazio>
+<declaração> -> <declaração-de-variável>
