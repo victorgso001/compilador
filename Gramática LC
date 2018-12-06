@@ -1,3 +1,82 @@
-<corpo> -> <declarações><comando-composto>
-<declarações> -> <declaração>;|<declaração><declarações>|<vazio>
-<declaração> -> <declaração-de-variável>
+<programa> -> program <id> ; <declarações> begin <lista-de-comandos> end .
+
+
+<declarações> -> var <lista-de-ids> : <tipo>
+
+				| <declarações> var <lista-de-ids> : <tipo> ;
+
+				| <vazio>
+
+
+<lista-de-ids> -> <id>
+
+				| <lista-de-ids> , <id>
+
+
+<tipo> -> array [ <literal> .. <literal> ] of <tipo>
+
+				| integer
+
+				| real
+
+				| boolean
+
+
+<lista-de-comandos> -> <comando> ;
+
+				| <lista-de-comandos> <comando> ;
+
+				| <vazio>
+
+
+<comando> -> <variável> := <expressão>
+
+				| if <expressão> then <comando> ( else <comando> | <vazio> )
+
+				| while <expressão> do <comando>
+
+				| begin <lista-de-comandos> end
+
+
+<variável> -> <id> <seletor>
+
+
+<seletor> -> <seletor> "[" <expressão> "]"
+
+				| "[" <expressão> "]"
+
+				| <vazio>
+
+
+<expressão> -> <expressão-simples>
+
+				| <expressão-simples> (< | > | <= | >= | = | <>) <expressão-simples>
+
+
+<expressão-simples> -> <expressão-simples> (+ | - | or) <termo>
+
+				| <termo>
+
+
+<termo> -> <termo> (* | / | and) <fator>
+
+				| <variável>
+
+				| bool-lit
+
+				| int-lit
+
+				| float-lit
+
+				| "(" <expressão> ")"
+
+
+<fator> -> <variável>
+
+				| bool-lit
+
+				| int-lit
+
+				| float-lit
+
+				| "(" <expressão> ")"
