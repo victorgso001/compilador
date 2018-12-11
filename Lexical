@@ -1,0 +1,7 @@
+<Token> ::= <int-lit> | <float-lit> | <bool-lit> | <id> | <op-ad> |
+            <op-mul> | <op-rel> | := | "(" | ")" | "[" | "]" | . |
+            .. | , | ; | : | eof
+
+<int-lit> ::= <digito> | <int-lit><digito>
+
+<float-lit> ::=
