@@ -1,1 +1,5 @@
-<Token> ::= Letter(Letter|Digit)* | Digit(Digit)*
+<Token> ::= Letter(Letter|Digit)* | Digit(Digit)* | + | - |
+            * | / | < | > | <= | >= | = | <> | := | "(" | ")" 
+            | "[" | "]" | . | .. | , | ; | : | eof
+        
+<Separador> ::= space | eol
