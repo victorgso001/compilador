@@ -4,4 +4,16 @@
 
 <int-lit> ::= <digito> | <int-lit><digito>
 
-<float-lit> ::=
+<float-lit> ::= <int-lit> . <int-lit> | <int-lit> . | . <int-lit>
+
+<bool-lit> ::= true | false
+
+<id> ::= <letra> | <id> <letra> | <id> <digito>
+
+<op-ad> ::= + | - | or
+
+<op-mul> ::= * | / | and
+
+<op-rel> ::= < | > | <= | >= | = | <>
+
+<separator> ::= space | eol
