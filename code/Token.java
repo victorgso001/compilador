@@ -1,10 +1,16 @@
 public class Token {
   public byte kind;
   public String spelling;
+  public int line, column;
 
-  public Token (byte kind, String spelling) {
+  public Token (byte kind, String spelling, int line, int column) {
     this.kind = kind;
     this.spelling = spelling;
+    this.line = line;
+    this.column = column;
+
+    //Check with identifier to use, gives right identifier value
+    if(this.kind == )
   }
 
   public final static byte
@@ -48,5 +54,14 @@ public class Token {
     FALSE = 37,
     OF = 38,
     ARRAY = 39,
-    COMMA = 8;
+    COMMA = 40,
+    EOF = 41,
+    ERROR = 42;
 }
+
+public final static String[] SPELLINGS = {"ASSIGN", "BEGIN", "END", "IF", "THEN", "ELSE", "LPAREN", "RPAREN", "VAR", "COLON",
+                                          "INTLIT", "DOT", "DOTDOT", "SEMICOLON", "FLOATLIT", "ID", "WHILE", "DO", "PLUS",
+                                          "PLUS", "MINUS", "OR", "TIMES", "SLASH", "AND", "GREATERTHAN", "LESSTHAN",
+                                          "GREATEREQUAL", "LESSEQUAL", "EQUAL", "DIFFERENT", "ERRORTOKEN", "LBRACKET",
+                                          "RBRACKET", "INTEGER", "REAL", "BOOLEAN", "TRUE", "FALSE", "OF", "ARRAY", "COMMA",
+                                          "EOF", "ERROR"};
