@@ -1,4 +1,4 @@
-<Token> ::= Letter(Letter|Digit)* | Digit(Digit)* | + | - |
+<Token> ::= Letter(Letter|Digit)* | Digit(Digit)* | Digit(Digit)*(e|.) | .(Digit(Digit)*) | + | - |
             * | / | < | > | <= | >= | = | <> | := | "(" | ")" 
             | "[" | "]" | . | .. | , | ; | : | eof
         
