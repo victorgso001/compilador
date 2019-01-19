@@ -10,7 +10,23 @@ public class Token {
     this.column = column;
 
     //Check with identifier to use, gives right identifier value
-    if(this.kind == )
+    if(this.kind == ASSIGN){
+      for(byte x = BEGIN; x <= COMMA; x++){
+        if(this.spelling.equals(SPELLINGS[x])){
+            if(this.spelling.compareTo("true") == 0 ||
+               this.spelling.compareTo("False") == 0){ //Verifica se o identificador é boolean
+                 this.code = BOOLLIT;
+               }else if(this.spelling.compareTo("and")==0){ //Verifica se o identificador é de op-mul
+                 this.code = OPMUL;
+               }else if(this.spelling.compareTo("or")==0){ //Verifica se o identificador é de op-ad
+                 this.code = OPAD;
+               }else {
+                 this.code = x;
+               }
+
+        }
+      }
+    }
   }
 
   public final static byte
