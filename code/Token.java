@@ -9,19 +9,19 @@ public class Token {
     this.line = line;
     this.column = column;
 
-    //Check with identifier to use, gives right identifier value
+    //Check which identifier to use, gives right identifier value
     if(this.kind == ASSIGN){
       for(byte x = BEGIN; x <= COMMA; x++){
         if(this.spelling.equals(SPELLINGS[x])){
             if(this.spelling.compareTo("true") == 0 ||
-               this.spelling.compareTo("False") == 0){ //Verifica se o identificador é boolean
-                 this.code = BOOLLIT;
+               this.spelling.compareTo("false") == 0){ //Verifica se o identificador é boolean
+                 this.kind = BOOLLIT;
                }else if(this.spelling.compareTo("and")==0){ //Verifica se o identificador é de op-mul
-                 this.code = OPMUL;
+                 this.kind = OPMUL;
                }else if(this.spelling.compareTo("or")==0){ //Verifica se o identificador é de op-ad
-                 this.code = OPAD;
+                 this.kind = OPAD;
                }else {
-                 this.code = x;
+                 this.kind = x;
                }
 
         }
@@ -72,7 +72,11 @@ public class Token {
     ARRAY = 39,
     COMMA = 40,
     EOF = 41,
-    ERROR = 42;
+    ERROR = 42,
+    BOOLLIT = 43,
+    OPMUL = 44,
+    OPAD = 45;
+
 }
 
 public final static String[] SPELLINGS = {"ASSIGN", "BEGIN", "END", "IF", "THEN", "ELSE", "LPAREN", "RPAREN", "VAR", "COLON",

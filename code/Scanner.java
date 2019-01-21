@@ -6,7 +6,7 @@ import java.io.EOFException;
 
 
 public class Scanner {
-  private FileImputStream file;
+  private FileInputStream file;
   private InputStreamReader fopen;
 
 
