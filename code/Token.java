@@ -77,7 +77,7 @@ public class Token {
     OPMUL = 44,
     OPAD = 45;
 
-}
+
 
 public final static String[] SPELLINGS = {"ASSIGN", "BEGIN", "END", "IF", "THEN", "ELSE", "LPAREN", "RPAREN", "VAR", "COLON",
                                           "INTLIT", "DOT", "DOTDOT", "SEMICOLON", "FLOATLIT", "ID", "WHILE", "DO", "PLUS",
@@ -85,3 +85,4 @@ public final static String[] SPELLINGS = {"ASSIGN", "BEGIN", "END", "IF", "THEN"
                                           "GREATEREQUAL", "LESSEQUAL", "EQUAL", "DIFFERENT", "ERRORTOKEN", "LBRACKET",
                                           "RBRACKET", "INTEGER", "REAL", "BOOLEAN", "TRUE", "FALSE", "OF", "ARRAY", "COMMA",
                                           "EOF", "ERROR"};
+}
