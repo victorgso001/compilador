@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 public class Scanner {
   private FileInputStream file;
   private InputStreamReader fopen;
+  
 
 
 }
