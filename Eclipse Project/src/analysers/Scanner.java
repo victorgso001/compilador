@@ -12,11 +12,11 @@ public class Scanner {
   private InputStreamReader fopen;
   private PushbackReader reader;
   private int line = 1, column =0;
-  
+
   private Character actualChar;
   private byte actualCode;
   private StringBuffer actualSpelling;
-  
+
   //Constructor will receive path of the code and try to open it
   public Scanner(String path) {
 	  try {
@@ -39,7 +39,7 @@ public class Scanner {
 	  column++;
 	  return c;
   }
-  
+
   //Method that verifies if current char is null. If so, returns false. If not, returns the char back
   public boolean compare(char c) {
 	  if(actualChar == null) {
@@ -48,7 +48,7 @@ public class Scanner {
 		  return actualChar == c;
 	  }
   }
-  
+
   //Lookahead Method
   private boolean lookahead(int c) throws IOException{
 	  int nextchar = this.reader.read();
@@ -62,7 +62,7 @@ public class Scanner {
 	  }
 	  return false;
   }
-  
+
   //Separator control
   private void lookForSeparator() throws IOException{
 	  switch(actualChar) {
@@ -75,13 +75,13 @@ public class Scanner {
 	  break;
 	  }
   }
-  
+
   //Checks if is digit
   private boolean isDigit(Character c) {
 	  if(c == null) { //if empty, returns null
 		  return false;
 	  }
-	  
+
 	  int ascii = (int)c;
 	  if(ascii >=48 && ascii <= 57) { //Values between 0 - 9
 		  return true;
@@ -89,7 +89,7 @@ public class Scanner {
 	  //if is not a digit,
 	  return false;
   }
-  
+
   //Check if is letter
   private boolean isLetter(Character c) {
 	  if(c==null) {
@@ -101,6 +101,6 @@ public class Scanner {
 	  }
 	  return false
   }
-  
-  
+
+
 }
