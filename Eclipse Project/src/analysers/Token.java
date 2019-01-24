@@ -11,7 +11,7 @@ public class Token {
 		this.column = column;
 		
 		//Check which identifier to use, gets right identifier value
-		if(this.kind == ASSIGN) {
+		if(this.kind == IDENTIFIER) {
 			for(byte x = BEGIN; x <= OPAD; x++) {
 				if(this.spelling.equals(SPELLINGS[x])) {
 					if(this.spelling.compareTo("true") ==0 || this.spelling.compareTo("false") == 0) {
@@ -78,7 +78,8 @@ public class Token {
     ERROR = 42,
     BOOLLIT = 43,
     OPMUL = 44,
-    OPAD = 45;
+    OPAD = 45,
+	IDENTIFIER = 46;
 	
 	public final static String[] SPELLINGS = {"ASSIGN", "BEGIN", "END", "IF", "THEN", "ELSE", "LPAREN", "RPAREN", "VAR", "COLON",
             "INTLIT", "DOT", "DOTDOT", "SEMICOLON", "FLOATLIT", "ID", "WHILE", "DO", "PLUS",
