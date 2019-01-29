@@ -12,7 +12,7 @@ public class Token {
 		
 		//Check which identifier to use, gets right identifier value
 		if(this.kind == IDENTIFIER) {
-			for(byte x = BEGIN; x <= OPAD; x++) {
+			for(byte x = ASSIGN; x <= OPAD; x++) {
 				if(this.spelling.equals(SPELLINGS[x])) {
 					if(this.spelling.compareTo("true") ==0 || this.spelling.compareTo("false") == 0) {
 						//Check if the identifier is boolean
@@ -81,10 +81,10 @@ public class Token {
     OPAD = 45,
 	IDENTIFIER = 46;
 	
-	public final static String[] SPELLINGS = {"ASSIGN", "BEGIN", "END", "IF", "THEN", "ELSE", "LPAREN", "RPAREN", "VAR", "COLON",
-            "INTLIT", "DOT", "DOTDOT", "SEMICOLON", "FLOATLIT", "ID", "WHILE", "DO", "PLUS",
-            "PLUS", "MINUS", "OR", "TIMES", "SLASH", "AND", "GREATERTHAN", "LESSTHAN",
-            "GREATEREQUAL", "LESSEQUAL", "EQUAL", "DIFFERENT", "ERRORTOKEN", "LBRACKET",
-            "RBRACKET", "INTEGER", "REAL", "BOOLEAN", "TRUE", "FALSE", "OF", "ARRAY", "COMMA",
-            "EOF", "ERROR"};
+	public final static String[] SPELLINGS = {"ASSIGN", "BEGIN", "END", "if", "then", "else", "(", ")", "VAR", ":",
+            "INTLIT", ".", "..", ";", "FLOATLIT", "ID", "while", "do", "+",
+            "-", "or", "*", "/", "and", ">", "<",
+            ">=", "<=", "=", "<>", "ERRORTOKEN", "[",
+            "]", "INTEGER", "REAL", "BOOLEAN", "true", "false", "of", "ARRAY", ",",
+            "EOF", "ERROR", "BOOLLIT", "OPMUL", "OPAD"};
 }

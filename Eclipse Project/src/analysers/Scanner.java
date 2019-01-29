@@ -3,7 +3,6 @@ package analysers;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PushbackReader;
-import java.io.EOFException;
 import java.io.FileInputStream;
 
 
@@ -18,7 +17,7 @@ public class Scanner {
   private StringBuffer actualSpelling;
 
   //Constructor will receive path of the code and try to open it
-  public Scanner(String path) {
+  public Scanner(String path) throws IOException {
 	  try {
 		  this.file = new FileInputStream(path);
 		  this.fopen = new InputStreamReader(this.file);
@@ -48,6 +47,20 @@ public class Scanner {
 		  return actualChar == c;
 	  }
   }
+  
+  //Separator control
+  private void lookForSeparator() throws IOException{
+	  switch(actualChar) {
+	  case ' ': case '\n': case (char)9:
+		  if(compare('\n')) {//If \n, go to next row - EOL
+			  System.out.println("Tá chegando aqui");
+			  row++;
+			  column = 0;
+		  }
+	  actualChar = getChar();
+	  break;
+	  }
+  }
 
   //Lookahead Method
   private boolean lookahead(int c) throws IOException{
@@ -61,19 +74,6 @@ public class Scanner {
 		  this.reader.unread(nextchar);
 	  }
 	  return false;
-  }
-
-  //Separator control
-  private void lookForSeparator() throws IOException{
-	  switch(actualChar) {
-	  case ' ': case '\n': case (char)9:
-		  if(compare('\n')) {//If \n, go to next row - EOL
-			  row++;
-			  column = 0;
-		  }
-	  actualChar = getChar();
-	  break;
-	  }
   }
 
   //Checks if is digit
@@ -106,16 +106,7 @@ public class Scanner {
   private void takeIt() throws IOException{
 	  this.actualSpelling.append(actualChar);
 	  this.actualChar = getChar();
-  }
-  
-  //Accept a conditional token
-  private void conditional(Character asked) throws IOException{
-	  if(actualChar == asked) {
-		  actualSpelling.append(asked);
-		  actualChar = getChar();
-	  } else {
-		  System.out.println("Error: in row: " + row + ", column: " + column + ", token: " + actualSpelling + " is invalid.");
-	  }
+	  //this.column++;
   }
   
   //Method that returns a token
@@ -133,7 +124,7 @@ public class Scanner {
 		  while(isLetter(actualChar) || isDigit(actualChar)) {
 			  takeIt();
 		  }
-		  return Token.ASSIGN;
+		  return Token.IDENTIFIER;
 	  
 	  //Numbers acceptance
 	  case '0': case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8':
@@ -265,4 +256,34 @@ public class Scanner {
 		  return Token.ERROR;
 	  }
   } 
+  
+  public Token scan() throws IOException{
+	  if(currentNull()) {
+		  return new Token (Token.EOF, "EOF", this.row, this.column);
+		  }
+	  if (compare (' ') || compare ('\n') || compare ('\t')) {
+		  System.out.println("Chegou aqui.");
+		  lookForSeparator();
+		  if(currentNull()) {
+			  return new Token(Token.EOF, "EOF", this.row, this.column);
+		  }
+	  }
+  	  actualSpelling = new StringBuffer("");
+	  actualCode = tokenScanner();
+	  
+	  if(actualCode == Token.EOF) {
+		  System.out.println("Erro: Não existe o arquivo");
+	  }
+	  
+	  if(actualCode == Token.ERROR) {
+		  System.out.println("Erro na linha: " + row + ", coluna: " + (column-this.actualSpelling.toString().length()) + ". Tipo de identificador" + actualSpelling.toString() + "não aceito.");
+	  }
+	  
+	  return new Token(actualCode, actualSpelling.toString(), row, column-this.actualSpelling.toString().length()); 
+  }
+  
+  private boolean currentNull() {
+	  return actualChar == null;
+  }
+  
 }

@@ -10,14 +10,17 @@ import java.io.IOException;
 
 
 public class Main {
+	
+	private static Scanner scan;
 
 	public static void main(String[] args) throws IOException {
 		
 		String path = new String();
 		
 		try {
-			FileReader arq = new FileReader("d:\\code.txt");
+			FileReader arq = new FileReader("e:\\code.txt");
 			BufferedReader lerArq = new BufferedReader(arq);
+			scan = new Scanner("e:\\code.txt");
 			
 			String text = lerArq.readLine();			
 			path = text + "\n";
@@ -25,15 +28,14 @@ public class Main {
 			while(text != null) {
 				text = lerArq.readLine();
 				path = path + text + "\n";
+				Token token = scan.scan();
+				System.out.println("Column : " + token.column + " Line: " + token.line + " Spelling: " + token.spelling + " Code: " + token.kind);
+			
 			}
-			
-			lerArq.close();
-			
+
 		}catch (IOException e) {
 	        System.err.printf("Erro na abertura do arquivo: %s.\n",e.getMessage());
 	    }
-		
-		System.out.print(path);
 		
 	}
 
