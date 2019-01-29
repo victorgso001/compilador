@@ -1,3 +1,4 @@
-if; 
-else
-identifier
+program teste;
+begin
+end
+.

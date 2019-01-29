@@ -1,44 +1,68 @@
-//package analysers;
-//
-//public class Parser {
-//	  private Token curentToken;
-//	  private Scanner scanner;
-//
-//	  
-//	  public Parser(String path) {
-//		  scanner = new Scanner(path);
-//	  }
-//	  
-//	  
-//	  
-//	  private accept (byte expectedKind) {
-//	    if (this.currentToken.kind == expectedKind) {
-//	      this.currentToken = scanner.scan();
-//	    }
-//	    else {
-//	      // REPORTAR ERRO AQUI
-//	    }
-//	  }
-//
-//	  private void acceptIt () {
-//	    this.curentToken = scanner.scan();
-//	  }
-//
-//	  public void parse () {
-//	    this.currentToken = scanner.scan();
-//	    this.parseProgram();
-//
-//	    if (currentToken.kind != Token.DOT) {
-//	      // REPORTAR ERRO AQUI
-//	    }
-//	  }
-//
-//	  private void parseIdentifier () {
-//	    if (this.currentToken.kind == Token.ID) {
-//	      this.acceptIt();
-//	    }
-//	    else {
-//	      // REPORTAR ERRO AQUI
-//	    }
-//	  }
-//	}
+package analysers;
+
+import java.util.Queue;
+
+public class Parser {
+	private Token currentToken;
+	private Queue<Token> tokenQueue;
+	
+	public Parser(Queue<Token> tokenQueue) {
+		this.tokenQueue = tokenQueue;
+	}
+	
+	private void accept(byte expectedKind) throws Exception {
+		if (this.currentToken.kind == expectedKind) {
+			this.currentToken = this.tokenQueue.peek();
+		}
+		else {
+			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(" + this.tokenQueue.peek().line + ", " + this.tokenQueue.peek().column + ")");
+		}
+	}
+	
+	private void acceptIt() {
+		this.currentToken = this.tokenQueue.poll();
+	}
+	
+	public void run() throws Exception {
+		acceptIt();
+		
+		parseProgram();
+		
+		if (currentToken.kind != Token.EOF) {
+			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(" + this.tokenQueue.peek().line + ", " + this.tokenQueue.peek().column + ")");
+		}
+	}
+	
+	private void parseProgram() throws Exception {
+		accept(Token.PROGRAM);
+		acceptIt();
+		accept(Token.ID);
+		acceptIt();
+		accept(Token.SEMICOLON);
+		acceptIt();
+		parseDeclaration();
+		accept(Token.BEGIN);
+		acceptIt();
+		parseCommand();
+		accept(Token.END);
+		acceptIt();
+		accept(Token.DOT);
+		acceptIt();
+	}
+	
+	private void parseDeclaration() {
+		
+	}
+	
+	private void parseSingleDeclaration() {
+		
+	}
+	
+	private void parseCommand() {
+		
+	}
+	
+	private void parseSingleCommand() {
+		
+	}
+}

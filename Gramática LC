@@ -1,7 +1,7 @@
 <programa> -> program <id> ; <declarações> begin <lista-de-comandos> end .
 
 
-<declarações> -> var <lista-de-ids> : <tipo>
+<declarações> -> var <lista-de-ids> : <tipo> ;
 
 				| <declarações> var <lista-de-ids> : <tipo> ;
 

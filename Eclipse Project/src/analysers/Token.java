@@ -12,7 +12,7 @@ public class Token {
 		
 		//Check which identifier to use, gets right identifier value
 		if(this.kind == IDENTIFIER) {
-			for(byte x = ASSIGN; x <= OPAD; x++) {
+			for(byte x = ASSIGN; x <= PROGRAM; x++) {
 				if(this.spelling.equals(SPELLINGS[x])) {
 					if(this.spelling.compareTo("true") ==0 || this.spelling.compareTo("false") == 0) {
 						//Check if the identifier is boolean
@@ -79,13 +79,14 @@ public class Token {
     BOOLLIT = 43,
     OPMUL = 44,
     OPAD = 45,
-	IDENTIFIER = 46,
-	SEPARATOR = 47;
+    PROGRAM = 46,
+	IDENTIFIER = 47,
+	SEPARATOR = 48;
 	
 	public final static String[] SPELLINGS = {"ASSIGN", "BEGIN", "END", "if", "then", "else", "(", ")", "VAR", ":",
             "INTLIT", ".", "..", ";", "FLOATLIT", "ID", "while", "do", "+",
             "-", "or", "*", "/", "and", ">", "<",
             ">=", "<=", "=", "<>", "ERRORTOKEN", "[",
             "]", "INTEGER", "REAL", "BOOLEAN", "true", "false", "of", "ARRAY", ",",
-            "EOF", "ERROR", "BOOLLIT", "OPMUL", "OPAD"};
+            "EOF", "ERROR", "BOOLLIT", "OPMUL", "OPAD", "program"};
 }
