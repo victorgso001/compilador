@@ -6,7 +6,7 @@ import java.io.PushbackReader;
 import java.io.FileInputStream;
 
 
-public class Scanner {
+public class ScannerToken {
   private FileInputStream file;
   private InputStreamReader fopen;
   private PushbackReader reader;
@@ -17,7 +17,7 @@ public class Scanner {
   private StringBuffer actualSpelling;
 
   //Constructor will receive path of the code and try to open it
-  public Scanner(String path) throws IOException {
+  public ScannerToken(String path) throws IOException {
 	  try {
 		  this.file = new FileInputStream(path);
 		  this.fopen = new InputStreamReader(this.file);
@@ -53,10 +53,10 @@ public class Scanner {
 	  switch(actualChar) {
 	  case ' ': case '\n': case (char)9:
 		  if(compare('\n')) {//If \n, go to next row - EOL
-			  System.out.println("Tá chegando aqui");
 			  row++;
 			  column = 0;
 		  }
+	  //takeIt();
 	  actualChar = getChar();
 	  break;
 	  }
@@ -259,10 +259,10 @@ public class Scanner {
   
   public Token scan() throws IOException{
 	  if(currentNull()) {
+		  System.exit(0);
 		  return new Token (Token.EOF, "EOF", this.row, this.column);
 		  }
-	  if (compare (' ') || compare ('\n') || compare ('\t')) {
-		  System.out.println("Chegou aqui.");
+	  while (compare (' ') || compare ('\n') || compare ('\t') || compare((char)9)) {
 		  lookForSeparator();
 		  if(currentNull()) {
 			  return new Token(Token.EOF, "EOF", this.row, this.column);
