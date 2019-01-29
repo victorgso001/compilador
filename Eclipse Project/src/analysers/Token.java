@@ -79,7 +79,8 @@ public class Token {
     BOOLLIT = 43,
     OPMUL = 44,
     OPAD = 45,
-	IDENTIFIER = 46;
+	IDENTIFIER = 46,
+	SEPARATOR = 47;
 	
 	public final static String[] SPELLINGS = {"ASSIGN", "BEGIN", "END", "if", "then", "else", "(", ")", "VAR", ":",
             "INTLIT", ".", "..", ";", "FLOATLIT", "ID", "while", "do", "+",
