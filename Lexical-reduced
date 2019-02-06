@@ -1,5 +1,5 @@
 <Token> ::= Letter(Letter|Digit)* | Digit(Digit)* | Digit(Digit)*(e|.) | .(Digit(Digit)*) | + | - |
-            * | / | <(e|=|>) | >(e | =)| = | :(e | =) | "(" | ")" 
-            | "[" | "]" | . | .. | , | ; | eof
+            * | / | <(ε|=|>) | >(ε | =)| = | :(ε | =) | "(" | ")" 
+            | "[" | "]" | . (ε|.) | , | ; | eof
         
 <Separador> ::= space | eol
