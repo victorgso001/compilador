@@ -50,19 +50,40 @@ public class Parser {
 		acceptIt();
 	}
 	
-	private void parseDeclaration() {
-		
+	//
+	private void parseDeclaration() throws Exception {
+		accept(Token.VAR);
+		acceptIt();
+		if(this.currentToken.kind == Token.COMMA) {
+			acceptIt();
+						
+		}
 	}
 	
 	private void parseSingleDeclaration() {
 		
 	}
 	
-	private void parseCommand() {
-		
+	private void parseCommand() throws Exception {
+		accept(Token.IDENTIFIER);
+		acceptIt();
+		parseExpression();
 	}
 	
 	private void parseSingleCommand() {
 		
 	}
+	
+	private void parseExpression() throws Exception{
+		
+	}
+	
+	/* Método para implementar a chamada de erro caso exista um erro de sintaxe */
+	private static class syntaticError extends Exception {
+		syntaticError(String message){
+			super(message);
+		}
+	}
+	
+
 }
