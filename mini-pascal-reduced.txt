@@ -57,27 +57,11 @@
  
 	| "(" <expressão> ")" 
 
-<float-lit> ::= 
+<float-lit> ::= <int-lit> (ε|.)	| . <int-lit>
 
-	<int-lit> . <int-lit>
- 
-	| <int-lit> .
- 
-	| . <int-lit>
+<id> ::= <letra>(<letra>|<digito>)*
 
-<id> ::= 
-
-	<letra>
- 
-	| <id> <letra>
- 
-	| <id> <digito>
-
-<int-lit> ::=
- 
-	<digito>
- 
-	| <int-lit> <digito>
+<int-lit> ::= <digito>(<digito>)*
 
 <iterativo> ::=
  
@@ -123,19 +107,7 @@
  
 	| and
 
-<op-rel> ::=
- 
-	<
- 
-	| >
- 
-	| <=
- 
-	| >=
- 
-	| =
- 
-	| <>
+<op-rel> ::= <(ε|=|>) | >(ε|=) | =
 
 <outros> ::=
  
