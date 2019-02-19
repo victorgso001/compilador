@@ -1,4 +1,7 @@
 program teste;
+var int1, int2, intx : integer;
+var real1 : real;
+var arr1 : array [1.. 10 ] of integer;
 begin
 end
 .

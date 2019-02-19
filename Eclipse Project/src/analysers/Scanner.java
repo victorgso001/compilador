@@ -109,7 +109,7 @@ public class Scanner {
 			return false;
 		}
 
-		if(c >= '1' && c <= '9') {
+		if(c >= '0' && c <= '9') {
 			return true;
 		}
 
@@ -310,7 +310,7 @@ public class Scanner {
 		this.actualCode = tokenScanner();
 
 		if (this.actualCode == Token.ERROR) {
-			throw new Exception("Erro na linha: " + this.row + ", coluna: " + (this.column - this.actualSpelling.toString().length()) + ". Tipo de identificador" + this.actualSpelling.toString() + "nï¿½o aceito.");
+			throw new Exception("Erro na linha: " + this.row + ", coluna: " + (this.column - this.actualSpelling.toString().length()) + ". Tipo de identificador " + this.actualSpelling.toString() + " não aceito.");
 		}
 
 		return new Token(this.actualCode, this.actualSpelling.toString(), this.row, this.column - this.actualSpelling.toString().length()); 

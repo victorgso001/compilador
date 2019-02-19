@@ -16,7 +16,7 @@ public class Parser {
 			this.currentToken = this.tokenQueue.peek();
 		}
 		else {
-			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(" + this.tokenQueue.peek().line + ", " + this.tokenQueue.peek().column + ")");
+			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(Linha: " + this.tokenQueue.peek().line + ", Coluna: " + this.tokenQueue.peek().column + ")");
 		}
 	}
 	
@@ -31,7 +31,7 @@ public class Parser {
 		parseProgram();
 		
 		if (currentToken.kind != Token.EOF) {
-			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(" + this.tokenQueue.peek().line + ", " + this.tokenQueue.peek().column + ")");
+			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(Linha " + this.tokenQueue.peek().line + ", Coluna " + this.tokenQueue.peek().column + ")");
 		}
 		else {
 			System.out.println("Parser completed");
@@ -65,12 +65,22 @@ public class Parser {
 	private void parseSingleDeclaration() throws Exception {
 		accept(Token.VAR);
 		acceptIt();
-//		lista de ids
+		parseIdList();
 		accept(Token.COLON);
 		acceptIt();
 		parseType();
 		accept(Token.SEMICOLON);
 		acceptIt();
+	}
+	
+	private void parseIdList() throws Exception {
+		accept(Token.IDENTIFIER);
+		acceptIt();
+		while(this.currentToken.kind == Token.COMMA) {
+			acceptIt();
+			accept(Token.IDENTIFIER);
+			acceptIt();
+		}
 	}
 	
 	private void parseType() throws Exception {
@@ -86,7 +96,7 @@ public class Parser {
 		} else if (currentToken.kind == Token.ARRAY) {
 			parseComposedType();
 		} else {
-			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(" + this.tokenQueue.peek().line + ", " + this.tokenQueue.peek().column + ")");
+			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(Linha " + this.tokenQueue.peek().line + ", Coluna " + this.tokenQueue.peek().column + ")");
 		}
 	}
 	
@@ -117,30 +127,127 @@ public class Parser {
 			accept(Token.FLOATLIT);
 			acceptIt();
 		} else {
-			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(" + this.tokenQueue.peek().line + ", " + this.tokenQueue.peek().column + ")");
+			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(Linha " + this.tokenQueue.peek().line + ", Coluna " + this.tokenQueue.peek().column + ")");
 		}
 	}
 	
 	private void parseCommand() throws Exception {
+		while() {
+			parseSingleCommand();
+		}
+	}
+	
+	private void parseSingleCommand() {
+		parseAttribuition();
+		parseConditional();
+		parseIteration();
+		parseComposedCommand();
+	}
+	
+	private void parseAttribuition() throws Exception {
 		accept(Token.IDENTIFIER);
+		acceptIt();
+		if(currentToken.kind == Token.LBRACKET) {
+			parseArrayPosition();			
+		}
+		accept(Token.ASSIGN);
 		acceptIt();
 		parseExpression();
 	}
 	
-	private void parseSingleCommand() throws Exception {
-		
-	}
-	
-	private void parseExpression() throws Exception {
-		
-	}
-	
-	/* M�todo para implementar a chamada de erro caso exista um erro de sintaxe */
-	private static class syntaticError extends Exception {
-		syntaticError(String message){
-			super(message);
+	private void parseConditional() throws Exception {
+		accept(Token.IF);
+		acceptIt();
+		parseExpression();
+		accept(Token.THEN);
+		acceptIt();
+		parseSingleCommand();
+		if(currentToken.kind == Token.ELSE) {
+			acceptIt();
+			parseSingleCommand();			
 		}
 	}
 	
-
+	private void parseIteration() throws Exception {
+		accept(Token.WHILE);
+		acceptIt();
+		parseExpression();
+		accept(Token.DO);
+		acceptIt();
+		parseSingleCommand();
+	}
+	
+	private void parseComposeCommand() throws Exception {
+		accept(Token.BEGIN);
+		acceptIt();
+		parseCommand();
+		accept(Token.END);
+		acceptIt();
+	}
+	
+	private void parseArrayPosition() throws Exception {
+		acceptIt();
+		parseExpression();
+		accept(Token.RBRACKET);
+		acceptIt();
+	}
+	
+	private void parseExpression() throws Exception {
+		parseSingleExpression();
+		if(isOpRel()) {
+			acceptIt();
+			parseSingleExpression();
+		}
+	}
+	
+	private boolean isOpRel() throws Exception {
+		if (this.currentToken.kind == Token.GREATERTHAN) {
+			accept(Token.GREATERTHAN);
+			return true;
+		} else if (this.currentToken.kind == Token.LESSTHAN) {
+			accept(Token.LESSTHAN);
+			return true;
+		} else if (this.currentToken.kind == Token.GREATEREQUAL) {
+			accept(Token.GREATEREQUAL);
+			return true;
+		} else if (this.currentToken.kind == Token.LESSEQUAL) {
+			accept(Token.LESSEQUAL);
+			return true;
+		} else if (this.currentToken.kind == Token.EQUAL) {
+			accept(Token.EQUAL);
+			return true;
+		} else if (this.currentToken.kind == Token.DIFFERENT) {
+			accept(Token.DIFFERENT);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private void parseSingleExpression() throws Exception {
+		parseTerm();
+		if(isOpAd()) {
+			acceptIt();
+			parseTerm();
+		}
+	}
+	
+	private boolean isOpAd() throws Exception {
+		if (this.currentToken.kind == Token.PLUS) {
+			accept(Token.PLUS);
+			return true;
+		}else if (this.currentToken.kind == Token.MINUS) {
+			accept(Token.MINUS);
+			return true;
+		} else if (this.currentToken.kind == Token.OR || this.currentToken.kind == Token.OPAD) {
+			accept(Token.OR);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private void parseTerm() {
+		
+	}
 }

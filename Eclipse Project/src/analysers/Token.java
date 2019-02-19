@@ -83,10 +83,10 @@ public class Token {
 	IDENTIFIER = 47,
 	SEPARATOR = 48;
 	
-	public final static String[] SPELLINGS = {"ASSIGN", "begin", "end", "if", "then", "else", "(", ")", "VAR", ":",
+	public final static String[] SPELLINGS = {":=", "begin", "end", "if", "then", "else", "(", ")", "var", ":",
             "INTLIT", ".", "..", ";", "FLOATLIT", "ID", "while", "do", "+",
             "-", "or", "*", "/", "and", ">", "<",
             ">=", "<=", "=", "<>", "ERRORTOKEN", "[",
-            "]", "INTEGER", "REAL", "BOOLEAN", "true", "false", "of", "ARRAY", ",",
+            "]", "integer", "real", "BOOLEAN", "true", "false", "of", "array", ",",
             "EOF", "ERROR", "BOOLLIT", "OPMUL", "OPAD", "program"};
 }

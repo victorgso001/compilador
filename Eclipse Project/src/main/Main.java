@@ -13,7 +13,7 @@ import analysers.Token;
 
 public class Main {
 	
-	private static String filePath = "/home/alisson/univasf/compilador/Result/code.txt";
+	private static String filePath = "C:\\Users\\Victor\\source\\repos\\victorgso001\\compilador\\Result\\code.txt";
 	private static Scanner scanner;
 	private static Parser parser;
 
