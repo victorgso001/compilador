@@ -27,7 +27,7 @@ public class Main {
 			parser.run();
 			
 //			for (Token token : tokenQueue) {
-//				System.out.println(token.kind + " => " + token.spelling);
+//				System.out.println(token.kind + " => " + token.spelling + "(" + token.line + "," + token.column + ")");
 //			}
 
 		} catch (Exception e) {

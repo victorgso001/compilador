@@ -11,6 +11,7 @@ public class Parser {
 	}
 	
 	private void accept(byte expectedKind) throws Exception {
+		System.out.println("AC: " + expectedKind);
 		if (this.currentToken.kind == expectedKind) {
 			this.currentToken = this.tokenQueue.peek();
 		}
@@ -21,6 +22,7 @@ public class Parser {
 	
 	private void acceptIt() {
 		this.currentToken = this.tokenQueue.poll();
+		System.out.println("ACit:" + this.currentToken.kind);
 	}
 	
 	public void run() throws Exception {
@@ -31,19 +33,22 @@ public class Parser {
 		if (currentToken.kind != Token.EOF) {
 			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(" + this.tokenQueue.peek().line + ", " + this.tokenQueue.peek().column + ")");
 		}
+		else {
+			System.out.println("Parser completed");
+		}
 	}
 	
 	private void parseProgram() throws Exception {
 		accept(Token.PROGRAM);
 		acceptIt();
-		accept(Token.ID);
+		accept(Token.IDENTIFIER);
 		acceptIt();
 		accept(Token.SEMICOLON);
 		acceptIt();
-		parseDeclaration();
+//		parseDeclaration();
 		accept(Token.BEGIN);
 		acceptIt();
-		parseCommand();
+//		parseCommand();
 		accept(Token.END);
 		acceptIt();
 		accept(Token.DOT);
@@ -78,7 +83,7 @@ public class Parser {
 		
 	}
 	
-	/* Método para implementar a chamada de erro caso exista um erro de sintaxe */
+	/* Mï¿½todo para implementar a chamada de erro caso exista um erro de sintaxe */
 	private static class syntaticError extends Exception {
 		syntaticError(String message){
 			super(message);
