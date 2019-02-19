@@ -45,7 +45,7 @@ public class Parser {
 		acceptIt();
 		accept(Token.SEMICOLON);
 		acceptIt();
-//		parseDeclaration();
+		parseDeclaration();
 		accept(Token.BEGIN);
 		acceptIt();
 //		parseCommand();
@@ -57,16 +57,68 @@ public class Parser {
 	
 	//
 	private void parseDeclaration() throws Exception {
-		accept(Token.VAR);
-		acceptIt();
-		if(this.currentToken.kind == Token.COMMA) {
-			acceptIt();
-						
+		while (this.currentToken.kind == Token.VAR) {
+			parseSingleDeclaration();
 		}
 	}
 	
-	private void parseSingleDeclaration() {
-		
+	private void parseSingleDeclaration() throws Exception {
+		accept(Token.VAR);
+		acceptIt();
+//		lista de ids
+		accept(Token.COLON);
+		acceptIt();
+		parseType();
+		accept(Token.SEMICOLON);
+		acceptIt();
+	}
+	
+	private void parseType() throws Exception {
+		if (currentToken.kind == Token.INTEGER) {
+			accept(Token.INTEGER);
+			acceptIt();
+		} else if (currentToken.kind == Token.REAL) {
+			accept(Token.REAL);
+			acceptIt();
+		} else if (currentToken.kind == Token.BOOLEAN) {
+			accept(Token.BOOLEAN);
+			acceptIt();
+		} else if (currentToken.kind == Token.ARRAY) {
+			parseComposedType();
+		} else {
+			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(" + this.tokenQueue.peek().line + ", " + this.tokenQueue.peek().column + ")");
+		}
+	}
+	
+	private void parseComposedType() throws Exception {
+		accept(Token.ARRAY);
+		acceptIt();
+		accept(Token.LBRACKET);
+		acceptIt();
+		parseLiteral();
+		accept(Token.DOTDOT);
+		acceptIt();
+		parseLiteral();
+		accept(Token.RBRACKET);
+		acceptIt();
+		accept(Token.OF);
+		acceptIt();
+		parseType();
+	}
+	
+	private void parseLiteral() throws Exception {
+		if (currentToken.kind == Token.BOOLLIT) {
+			accept(Token.BOOLLIT);
+			acceptIt();
+		} else if (currentToken.kind == Token.INTLIT) {
+			accept(Token.INTLIT);
+			acceptIt();
+		} else if (currentToken.kind == Token.FLOATLIT) {
+			accept(Token.FLOATLIT);
+			acceptIt();
+		} else {
+			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(" + this.tokenQueue.peek().line + ", " + this.tokenQueue.peek().column + ")");
+		}
 	}
 	
 	private void parseCommand() throws Exception {
@@ -75,11 +127,11 @@ public class Parser {
 		parseExpression();
 	}
 	
-	private void parseSingleCommand() {
+	private void parseSingleCommand() throws Exception {
 		
 	}
 	
-	private void parseExpression() throws Exception{
+	private void parseExpression() throws Exception {
 		
 	}
 	
