@@ -247,7 +247,18 @@ public class Parser {
 		}
 	}
 	
-	private void parseTerm() {
-		
+	private void parseTerm() throws Exception {
+		parseIdList();
+		if(currentToken.kind == Token.LBRACKET) {
+			parseArrayPosition();			
+		}
+		//OU
+		parseLiteral();
+		//OU
+		accept(Token.LBRACKET);
+		acceptIt();
+		parseExpression();
+		accept(Token.RBRACKET);
+		acceptIt();
 	}
 }
