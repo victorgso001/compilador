@@ -3,5 +3,9 @@ var int1, int2, intx : integer;
 var real1 : real;
 var arr1 : array [1.. 10 ] of integer;
 begin
+arr1[2] := 12;
+int1 := 16;
+int2 := 3;
+intx := int1 * int2 + arr1[2];
 end
 .

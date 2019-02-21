@@ -48,14 +48,13 @@ public class Parser {
 		parseDeclaration();
 		accept(Token.BEGIN);
 		acceptIt();
-//		parseCommand();
+		parseCommand();
 		accept(Token.END);
 		acceptIt();
 		accept(Token.DOT);
 		acceptIt();
 	}
-	
-	//
+
 	private void parseDeclaration() throws Exception {
 		while (this.currentToken.kind == Token.VAR) {
 			parseSingleDeclaration();
@@ -123,28 +122,31 @@ public class Parser {
 		} else if (currentToken.kind == Token.INTLIT) {
 			accept(Token.INTLIT);
 			acceptIt();
-		} else if (currentToken.kind == Token.FLOATLIT) {
+		} else {
 			accept(Token.FLOATLIT);
 			acceptIt();
-		} else {
-			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(Linha " + this.tokenQueue.peek().line + ", Coluna " + this.tokenQueue.peek().column + ")");
 		}
 	}
 	
 	private void parseCommand() throws Exception {
-		while() {
+		while (this.currentToken.kind == Token.IDENTIFIER ||
+				this.currentToken.kind == Token.IF ||
+				this.currentToken.kind == Token.WHILE ||
+				this.currentToken.kind == Token.BEGIN) {
 			parseSingleCommand();
+			accept(Token.SEMICOLON);
+			acceptIt();
 		}
 	}
 	
-	private void parseSingleCommand() {
+	private void parseSingleCommand() throws Exception {
 		if (currentToken.kind == Token.IDENTIFIER) {
 			parseAttribuition();
 		} else if (currentToken.kind == Token.IF) {
 			parseConditional();
 		} else if (currentToken.kind == Token.WHILE) {
 			parseIteration();
-		} else if () {
+		} else {
 			parseComposedCommand();
 		}
 	}
@@ -182,7 +184,7 @@ public class Parser {
 		parseSingleCommand();
 	}
 	
-	private void parseComposeCommand() throws Exception {
+	private void parseComposedCommand() throws Exception {
 		accept(Token.BEGIN);
 		acceptIt();
 		parseCommand();
@@ -253,19 +255,40 @@ public class Parser {
 	}
 	
 	private void parseTerm() throws Exception {
-		//Se for Identifier, passa lista de IDs
-		if (currentToken.kind == Token.IDENTIFIER) {
-			parseIdList();
-			if (currentToken.kind == Token.LBRACKET) {
+		parseFactor();
+		if (isOpMul()) {
+			acceptIt();
+			parseFactor();
+		}
+	}
+	
+	private boolean isOpMul() throws Exception {
+		if (this.currentToken.kind == Token.TIMES) {
+			accept(Token.TIMES);
+			return true;
+		} else if (this.currentToken.kind == Token.SLASH) {
+			accept(Token.SLASH);
+			return true;
+		} else if (this.currentToken.kind == Token.AND) {
+			accept(Token.AND);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private void parseFactor() throws Exception {
+		if (this.currentToken.kind == Token.IDENTIFIER) {
+			acceptIt();
+			if (this.currentToken.kind == Token.LBRACKET) {
 				parseArrayPosition();			
 			}
-		}else if (currentToken.kind == Token.LBRACKET) {
-			accept(Token.LBRACKET);
-			acceptIt();
-			parseArrayPosition();
-		}else if (currentToken.kind == Token.INTEGER || currentToken.kind == Token.BOOLLIT 
-				  || currentToken.kind == Token.FLOATLIT) {
+		} else if (this.currentToken.kind == Token.INTLIT ||
+			this.currentToken.kind == Token.BOOLLIT ||
+			this.currentToken.kind == Token.FLOATLIT) {
 			parseLiteral();
+		} else {
+			parseExpression();
 		}
 	}
 }
