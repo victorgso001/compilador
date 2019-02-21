@@ -138,10 +138,15 @@ public class Parser {
 	}
 	
 	private void parseSingleCommand() {
-		parseAttribuition();
-		parseConditional();
-		parseIteration();
-		parseComposedCommand();
+		if (currentToken.kind == Token.IDENTIFIER) {
+			parseAttribuition();
+		} else if (currentToken.kind == Token.IF) {
+			parseConditional();
+		} else if (currentToken.kind == Token.WHILE) {
+			parseIteration();
+		} else if () {
+			parseComposedCommand();
+		}
 	}
 	
 	private void parseAttribuition() throws Exception {
@@ -248,17 +253,19 @@ public class Parser {
 	}
 	
 	private void parseTerm() throws Exception {
-		parseIdList();
-		if(currentToken.kind == Token.LBRACKET) {
-			parseArrayPosition();			
+		//Se for Identifier, passa lista de IDs
+		if (currentToken.kind == Token.IDENTIFIER) {
+			parseIdList();
+			if (currentToken.kind == Token.LBRACKET) {
+				parseArrayPosition();			
+			}
+		}else if (currentToken.kind == Token.LBRACKET) {
+			accept(Token.LBRACKET);
+			acceptIt();
+			parseArrayPosition();
+		}else if (currentToken.kind == Token.INTEGER || currentToken.kind == Token.BOOLLIT 
+				  || currentToken.kind == Token.FLOATLIT) {
+			parseLiteral();
 		}
-		//OU
-		parseLiteral();
-		//OU
-		accept(Token.LBRACKET);
-		acceptIt();
-		parseExpression();
-		accept(Token.RBRACKET);
-		acceptIt();
 	}
 }
