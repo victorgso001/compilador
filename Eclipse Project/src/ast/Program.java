@@ -1,6 +1,5 @@
 package ast;
 
-public class Program extends Abstract_AST {
+public class Program extends Abstract_Program {
 
-	public Program()
 }
