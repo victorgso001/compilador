@@ -1,5 +1,5 @@
 package ast;
 
-public class Abstract_Vname extends Abstract_AST {
+public abstract class Abstract_Vname extends Abstract_AST {
 
 }

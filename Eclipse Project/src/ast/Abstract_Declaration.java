@@ -1,5 +1,5 @@
 package ast;
 
-public class Abstract_Declaration extends Abstract_AST {
+public abstract class Abstract_Declaration extends Abstract_AST {
 
 }
