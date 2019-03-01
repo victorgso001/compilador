@@ -1,6 +1,7 @@
 package analysers;
 
 import java.util.Queue;
+import ast.*;
 
 public class Parser {
 	private Token currentToken;
@@ -38,30 +39,39 @@ public class Parser {
 		}
 	}
 	
-	private void parseProgram() throws Exception {
+	private Program parseProgram() throws Exception {
+		Program Program;
 		accept(Token.PROGRAM);
 		acceptIt();
 		accept(Token.IDENTIFIER);
+		Identifier AI = new Identifier(currentToken.spelling);
 		acceptIt();
 		accept(Token.SEMICOLON);
 		acceptIt();
-		parseDeclaration();
+		Declaration AD = parseDeclaration();
 		accept(Token.BEGIN);
 		acceptIt();
-		parseCommand();
+		CommandsList AC = parseCommand();
+		Body AB = new Body(AD, AC);
 		accept(Token.END);
 		acceptIt();
 		accept(Token.DOT);
 		acceptIt();
+		Program = new Program(AI, AB);
+		return Program;
 	}
 
-	private void parseDeclaration() throws Exception {
+	private Declaration parseDeclaration() throws Exception {
+		Declaration d1 = null, d2;
 		while (this.currentToken.kind == Token.VAR) {
 			parseSingleDeclaration();
+			d2 = parseSingleDeclaration();
+			d1 = new Declaration(this.currentToken.spelling, AType);
 		}
 	}
 	
-	private void parseSingleDeclaration() throws Exception {
+	private Declaration parseSingleDeclaration() throws Exception {
+		Declaration Declaration = null;
 		accept(Token.VAR);
 		acceptIt();
 		parseIdList();
@@ -128,7 +138,7 @@ public class Parser {
 		}
 	}
 	
-	private void parseCommand() throws Exception {
+	private CommandsList parseCommand() throws Exception {
 		while (this.currentToken.kind == Token.IDENTIFIER ||
 				this.currentToken.kind == Token.IF ||
 				this.currentToken.kind == Token.WHILE ||
