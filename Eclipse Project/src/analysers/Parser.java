@@ -61,81 +61,113 @@ public class Parser {
 		return Program;
 	}
 
-	private Declaration parseDeclaration() throws Exception {
-		Declaration d1 = null, d2;
-		while (this.currentToken.kind == Token.VAR) {
-			parseSingleDeclaration();
-			d2 = parseSingleDeclaration();
-			d1 = new Declaration(this.currentToken.spelling, AType);
+	private DeclarationList parseDeclaration() throws Exception {
+		DeclarationList DL1 = null, DL2;
+		Declaration DTemp;
+
+		if (this.currentToken.kind == Token.VAR) {
+			DL1 = parseSingleDeclaration();
+			while (this.currentToken.kind == Token.VAR) {
+				DL2 = parseSingleDeclaration();
+				DL1 = new DeclarationList(DL1, DL2);
+			}
 		}
+		return DL1;
 	}
 	
 	private Declaration parseSingleDeclaration() throws Exception {
 		Declaration Declaration = null;
+		IDsList IdsList = null;
+		SimpleType Type = null;
+
 		accept(Token.VAR);
 		acceptIt();
-		parseIdList();
+		IdsList = parseIdList();
 		accept(Token.COLON);
 		acceptIt();
-		parseType();
+		Type = parseType();
 		accept(Token.SEMICOLON);
 		acceptIt();
+
+		return new Declaration(this.currentToken.spelling, AType);
 	}
 	
-	private void parseIdList() throws Exception {
+	private IDsList parseIdList() throws Exception {
+		IDsList IDL1 = null, IDL2;
+		
 		accept(Token.IDENTIFIER);
+		Identifier IDL1 = new Identifier(this.currentToken.spelling);
 		acceptIt();
 		while(this.currentToken.kind == Token.COMMA) {
 			acceptIt();
 			accept(Token.IDENTIFIER);
+			IDL2 = new Identifier(this.currentToken.spelling);
+			IDL1 = new IDsList(IDL1, IDL2);
 			acceptIt();
 		}
+
+		return IDL1;
 	}
 	
-	private void parseType() throws Exception {
+	private Abstract_Type parseType() throws Exception {
+		Abstract_Type Type = null;
 		if (currentToken.kind == Token.INTEGER) {
 			accept(Token.INTEGER);
+			Type = new SimpleType(this.currentToken.spelling);
 			acceptIt();
 		} else if (currentToken.kind == Token.REAL) {
 			accept(Token.REAL);
+			Type = new SimpleType(this.currentToken.spelling);
 			acceptIt();
 		} else if (currentToken.kind == Token.BOOLEAN) {
 			accept(Token.BOOLEAN);
+			Type = new SimpleType(this.currentToken.spelling);
 			acceptIt();
 		} else if (currentToken.kind == Token.ARRAY) {
-			parseComposedType();
+			Type = parseComposedType();
 		} else {
 			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(Linha " + this.tokenQueue.peek().line + ", Coluna " + this.tokenQueue.peek().column + ")");
 		}
+
+		return Type;
 	}
 	
-	private void parseComposedType() throws Exception {
+	private AggregateType parseComposedType() throws Exception {
+		Vname VN1, VN2;
+		SimpleType ST1;
 		accept(Token.ARRAY);
 		acceptIt();
 		accept(Token.LBRACKET);
 		acceptIt();
-		parseLiteral();
+		VN1 = parseLiteral();
 		accept(Token.DOTDOT);
 		acceptIt();
-		parseLiteral();
+		VN2 = parseLiteral();
 		accept(Token.RBRACKET);
 		acceptIt();
 		accept(Token.OF);
 		acceptIt();
-		parseType();
+		ST1 = parseType();
+
+		return new AggregateType(VN1, VN2, ST1);
 	}
 	
-	private void parseLiteral() throws Exception {
+	private Vname parseLiteral() throws Exception {
+		Vname VN;
 		if (currentToken.kind == Token.BOOLLIT) {
 			accept(Token.BOOLLIT);
+			VN = new Vname(this.currentToken.spelling);
 			acceptIt();
 		} else if (currentToken.kind == Token.INTLIT) {
 			accept(Token.INTLIT);
+			VN = new Vname(this.currentToken.spelling);
 			acceptIt();
 		} else {
 			accept(Token.FLOATLIT);
+			VN = new Vname(this.currentToken.spelling);
 			acceptIt();
 		}
+		return VN;
 	}
 	
 	private CommandsList parseCommand() throws Exception {
