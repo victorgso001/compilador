@@ -1,6 +1,9 @@
 package analysers;
 
 import java.util.Queue;
+
+import com.sun.javafx.fxml.expression.Expression;
+
 import ast.*;
 
 public class Parser {
@@ -48,7 +51,7 @@ public class Parser {
 		acceptIt();
 		accept(Token.SEMICOLON);
 		acceptIt();
-		Declaration AD = parseDeclaration();
+		DeclarationList AD = parseDeclaration();
 		accept(Token.BEGIN);
 		acceptIt();
 		CommandsList AC = parseCommand();
@@ -63,16 +66,17 @@ public class Parser {
 
 	private DeclarationList parseDeclaration() throws Exception {
 		DeclarationList DL1 = null, DL2;
-		Declaration DTemp;
+		Declaration D1 = null, D2;
 
 		if (this.currentToken.kind == Token.VAR) {
-			DL1 = parseSingleDeclaration();
+			D1 = parseSingleDeclaration();
 			while (this.currentToken.kind == Token.VAR) {
-				DL2 = parseSingleDeclaration();
-				DL1 = new DeclarationList(DL1, DL2);
+				D2 = parseSingleDeclaration();
+				DL1 = new DeclarationList(DL1, D2);
 			}
 		}
-		return DL1;
+		DL2 = new DeclarationList(DL1, D1);
+		return DL2;
 	}
 	
 	private Declaration parseSingleDeclaration() throws Exception {
@@ -83,30 +87,33 @@ public class Parser {
 		accept(Token.VAR);
 		acceptIt();
 		IdsList = parseIdList();
+		Identifier ID = new Identifier(this.currentToken.spelling);
 		accept(Token.COLON);
 		acceptIt();
-		Type = parseType();
+		Type = (SimpleType) parseType();
 		accept(Token.SEMICOLON);
 		acceptIt();
-
-		return new Declaration(this.currentToken.spelling, AType);
+		
+		//Aqui acho que a gente vai precisar fazer uma pilha e ir descarregando de IDsList e os Types
+		return new Declaration(ID, Type);
 	}
 	
 	private IDsList parseIdList() throws Exception {
 		IDsList IDL1 = null, IDL2;
+		Identifier ID1, ID2;
 		
 		accept(Token.IDENTIFIER);
-		Identifier IDL1 = new Identifier(this.currentToken.spelling);
+		ID1 = new Identifier(this.currentToken.spelling);
 		acceptIt();
 		while(this.currentToken.kind == Token.COMMA) {
 			acceptIt();
 			accept(Token.IDENTIFIER);
-			IDL2 = new Identifier(this.currentToken.spelling);
-			IDL1 = new IDsList(IDL1, IDL2);
+			ID2 = new Identifier(this.currentToken.spelling);
+			IDL1 = new IDsList(IDL1, ID2);
 			acceptIt();
 		}
-
-		return IDL1;
+		IDL2 = new IDsList(IDL1, ID1);
+		return IDL2;
 	}
 	
 	private Abstract_Type parseType() throws Exception {
@@ -147,7 +154,7 @@ public class Parser {
 		acceptIt();
 		accept(Token.OF);
 		acceptIt();
-		ST1 = parseType();
+		ST1 = (SimpleType) parseType();
 
 		return new AggregateType(VN1, VN2, ST1);
 	}
@@ -171,17 +178,30 @@ public class Parser {
 	}
 	
 	private CommandsList parseCommand() throws Exception {
-		while (this.currentToken.kind == Token.IDENTIFIER ||
+		ComposedCommand CC1 = null, CC2;
+		CommandsList CL1 = null, CL2;
+		if (this.currentToken.kind == Token.IDENTIFIER ||
 				this.currentToken.kind == Token.IF ||
 				this.currentToken.kind == Token.WHILE ||
 				this.currentToken.kind == Token.BEGIN) {
-			parseSingleCommand();
-			accept(Token.SEMICOLON);
-			acceptIt();
+			CC1 = parseSingleCommand();
+			while (this.currentToken.kind == Token.IDENTIFIER ||
+					this.currentToken.kind == Token.IF ||
+					this.currentToken.kind == Token.WHILE ||
+					this.currentToken.kind == Token.BEGIN) {
+				CC2 = parseSingleCommand();
+				CL1 = new CommandsList(CL1, CC2);
+				accept(Token.SEMICOLON);
+				acceptIt();
+			}
 		}
+		CL2 = new CommandsList (CL1, CC1);
+		return CL2;
+		
 	}
 	
-	private void parseSingleCommand() throws Exception {
+	private ComposedCommand parseSingleCommand() throws Exception {
+		ComposedCommand CC = null;
 		if (currentToken.kind == Token.IDENTIFIER) {
 			parseAttribuition();
 		} else if (currentToken.kind == Token.IF) {
@@ -189,8 +209,10 @@ public class Parser {
 		} else if (currentToken.kind == Token.WHILE) {
 			parseIteration();
 		} else {
-			parseComposedCommand();
+			CC = new ComposedCommand (parseComposedCommand());
 		}
+		
+		return CC;
 	}
 	
 	private void parseAttribuition() throws Exception {
@@ -204,17 +226,21 @@ public class Parser {
 		parseExpression();
 	}
 	
-	private void parseConditional() throws Exception {
+	private IfCommand parseConditional() throws Exception {
+		Abstract_Expression AE1;
+		ComposedCommand CC1, CC2 = null;
 		accept(Token.IF);
 		acceptIt();
-		parseExpression();
+		 AE1 = parseExpression();
 		accept(Token.THEN);
 		acceptIt();
-		parseSingleCommand();
+		CC1 = parseSingleCommand();
 		if(currentToken.kind == Token.ELSE) {
 			acceptIt();
-			parseSingleCommand();			
+			CC2 = parseSingleCommand();			
 		}
+		
+		return new IfCommand(AE1, CC1, CC2);
 	}
 	
 	private void parseIteration() throws Exception {
@@ -226,12 +252,14 @@ public class Parser {
 		parseSingleCommand();
 	}
 	
-	private void parseComposedCommand() throws Exception {
+	private CommandsList parseComposedCommand() throws Exception {
+		CommandsList CC;
 		accept(Token.BEGIN);
 		acceptIt();
-		parseCommand();
+		CC = parseCommand();
 		accept(Token.END);
 		acceptIt();
+		return CC;
 	}
 	
 	private void parseArrayPosition() throws Exception {
@@ -241,12 +269,14 @@ public class Parser {
 		acceptIt();
 	}
 	
-	private void parseExpression() throws Exception {
-		parseSingleExpression();
+	private MultipleExpression parseExpression() throws Exception {
+		SimpleExpression SE1, SE2 = null;
+		SE1 = parseSingleExpression();
 		if(isOpRel()) {
 			acceptIt();
-			parseSingleExpression();
+			SE2 = parseSingleExpression();
 		}
+		return new MultipleExpression(SE1, SE2);
 	}
 	
 	private boolean isOpRel() throws Exception {
@@ -273,12 +303,16 @@ public class Parser {
 		}
 	}
 	
-	private void parseSingleExpression() throws Exception {
-		parseTerm();
+	private SimpleExpression parseSingleExpression() throws Exception {
+		Term T1, T2 = null;
+		AdOperator AO = null;
+		T1 = parseTerm();
 		if(isOpAd()) {
+			AO = new AdOperator(this.currentToken.spelling);
 			acceptIt();
-			parseTerm();
+			T2 = parseTerm();
 		}
+		return new SimpleExpression(T1, AO, T2);
 	}
 	
 	private boolean isOpAd() throws Exception {
@@ -296,12 +330,17 @@ public class Parser {
 		}
 	}
 	
-	private void parseTerm() throws Exception {
-		parseFactor();
+	private Term parseTerm() throws Exception {
+		Factor F1, F2 = null;
+		MulOperator M1 = null;
+		F1 = parseFactor();
 		if (isOpMul()) {
+			M1 = new MulOperator(this.currentToken.spelling);
 			acceptIt();
-			parseFactor();
+			F2 = parseFactor();
 		}
+		
+		return new Term(F1, M1, F2);
 	}
 	
 	private boolean isOpMul() throws Exception {
@@ -319,8 +358,12 @@ public class Parser {
 		}
 	}
 	
-	private void parseFactor() throws Exception {
+	private Factor parseFactor() throws Exception {
+		Identifier ID1 = null;
+		Vname VN1 = null;
+		MultipleExpression ME1 = null;
 		if (this.currentToken.kind == Token.IDENTIFIER) {
+			ID1 = new Identifier(this.currentToken.spelling);
 			acceptIt();
 			if (this.currentToken.kind == Token.LBRACKET) {
 				parseArrayPosition();			
@@ -328,9 +371,12 @@ public class Parser {
 		} else if (this.currentToken.kind == Token.INTLIT ||
 			this.currentToken.kind == Token.BOOLLIT ||
 			this.currentToken.kind == Token.FLOATLIT) {
+			VN1 = new Vname(this.currentToken.spelling);
 			parseLiteral();
 		} else {
-			parseExpression();
+			ME1 = parseExpression();
 		}
+		
+		return new Factor(ID1, VN1, ME1);
 	}
 }
