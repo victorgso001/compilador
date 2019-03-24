@@ -9,12 +9,13 @@ import java.util.Queue;
 import analysers.Scanner;
 import analysers.Parser;
 import analysers.Token;
+import ast.Abstract_AST;
 
 
 public class Main {
 	
-	// private static String filePath = "C:\\Users\\Victor\\source\\repos\\victorgso001\\compilador\\Result\\code.txt";
-	private static String filePath = "/home/alisson/univasf/compilador/Result/code.txt";
+	private static String filePath = "C:\\Users\\Victor\\source\\repos\\victorgso001\\compilador\\Result\\code.txt";
+	// private static String filePath = "/home/alisson/univasf/compilador/Result/code.txt";
 	private static Scanner scanner;
 	private static Parser parser;
 
@@ -24,12 +25,12 @@ public class Main {
 			scanner = new Scanner(filePath);
 			Queue<Token> tokenQueue = scanner.run();
 			
-			parser = new Parser(tokenQueue);
-			parser.run();
+			for (Token token : tokenQueue) {
+				System.out.println(token.kind + " => " + token.spelling + "(" + token.line + "," + token.column + ")");
+			}
 			
-//			for (Token token : tokenQueue) {
-//				System.out.println(token.kind + " => " + token.spelling + "(" + token.line + "," + token.column + ")");
-//			}
+			parser = new Parser(tokenQueue);
+			Abstract_AST ast = parser.run();
 
 		} catch (Exception e) {
 	        System.out.printf(e.getMessage());

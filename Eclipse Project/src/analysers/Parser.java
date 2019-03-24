@@ -2,8 +2,6 @@ package analysers;
 
 import java.util.Queue;
 
-import com.sun.javafx.fxml.expression.Expression;
-
 import ast.*;
 
 public class Parser {
@@ -29,10 +27,12 @@ public class Parser {
 		System.out.println("ACit:" + this.currentToken.kind);
 	}
 	
-	public void run() throws Exception {
+	public Abstract_AST run() throws Exception {
+		Abstract_AST AST = null;
+		
 		acceptIt();
 		
-		parseProgram();
+		AST = parseProgram();
 		
 		if (currentToken.kind != Token.EOF) {
 			throw new Exception("Token inesperado: " + this.tokenQueue.peek().spelling + "(Linha " + this.tokenQueue.peek().line + ", Coluna " + this.tokenQueue.peek().column + ")");
@@ -40,6 +40,8 @@ public class Parser {
 		else {
 			System.out.println("Parser completed");
 		}
+		
+		return AST;
 	}
 	
 	private Program parseProgram() throws Exception {
@@ -80,22 +82,19 @@ public class Parser {
 	}
 	
 	private Declaration parseSingleDeclaration() throws Exception {
-		Declaration Declaration = null;
 		IDsList IdsList = null;
-		SimpleType Type = null;
+		Abstract_Type Type = null;
 
 		accept(Token.VAR);
 		acceptIt();
 		IdsList = parseIdList();
-		Identifier ID = new Identifier(this.currentToken.spelling);
 		accept(Token.COLON);
 		acceptIt();
-		Type = (SimpleType) parseType();
+		Type = parseType();
 		accept(Token.SEMICOLON);
 		acceptIt();
-		
-		//Aqui acho que a gente vai precisar fazer uma pilha e ir descarregando de IDsList e os Types
-		return new Declaration(ID, Type);
+
+		return new Declaration(IdsList, Type);
 	}
 	
 	private IDsList parseIdList() throws Exception {
@@ -141,7 +140,7 @@ public class Parser {
 	
 	private AggregateType parseComposedType() throws Exception {
 		Vname VN1, VN2;
-		SimpleType ST1;
+		Abstract_Type ST1;
 		accept(Token.ARRAY);
 		acceptIt();
 		accept(Token.LBRACKET);
@@ -154,7 +153,7 @@ public class Parser {
 		acceptIt();
 		accept(Token.OF);
 		acceptIt();
-		ST1 = (SimpleType) parseType();
+		ST1 = parseType();
 
 		return new AggregateType(VN1, VN2, ST1);
 	}
@@ -185,6 +184,8 @@ public class Parser {
 				this.currentToken.kind == Token.WHILE ||
 				this.currentToken.kind == Token.BEGIN) {
 			CC1 = parseSingleCommand();
+			accept(Token.SEMICOLON);
+			acceptIt();
 			while (this.currentToken.kind == Token.IDENTIFIER ||
 					this.currentToken.kind == Token.IF ||
 					this.currentToken.kind == Token.WHILE ||
