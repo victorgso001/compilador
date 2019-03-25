@@ -6,4 +6,8 @@ public class Identifier extends Abstract_Identifier {
     public Identifier (String Spelling) {
     	this.Spelling = Spelling;
     }
+    
+    public void visitor(String preTxt) {
+    	System.out.println(preTxt + this.Spelling);
+    }
 }

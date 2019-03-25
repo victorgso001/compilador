@@ -10,4 +10,17 @@ public class Factor extends Abstract_Factor {
     	this.AVN = AVN;
     	this.AE = AE;
     }
+    
+    public void visitor(String preTxt) {
+    	if (this.AI != null) {
+    		this.AI.visitor(preTxt);
+    	}
+    	if (this.AVN != null) {
+    		this.AVN.visitor(preTxt);
+    		System.out.println();
+    	}
+    	if (this.AE != null) {
+    		this.AE.visitor(preTxt);
+    	}
+	}
 }

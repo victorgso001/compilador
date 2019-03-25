@@ -6,4 +6,8 @@ public class ComposedCommand extends Abstract_Command {
     public ComposedCommand (Abstract_Command AC) {
     	this.AC = AC;
     }
+    
+    public void visitor(String preTxt) {
+    	this.AC.visitor(preTxt);
+    }
 }

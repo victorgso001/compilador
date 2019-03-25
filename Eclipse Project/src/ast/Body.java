@@ -8,4 +8,9 @@ public class Body extends Abstract_Body {
     	this.AD = AD;
     	this.AC = AC;
     }
+    
+    public void visitor(String preTxt) {
+    	this.AD.visitor(preTxt);
+    	this.AC.visitor(preTxt);
+    }
 }

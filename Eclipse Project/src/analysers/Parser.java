@@ -23,14 +23,15 @@ public class Parser {
 	}
 	
 	private void acceptIt() {
-		this.currentToken = this.tokenQueue.poll();
+		this.tokenQueue.poll();
+		this.currentToken = this.tokenQueue.peek();
 		System.out.println("ACit:" + this.currentToken.kind);
 	}
 	
-	public Abstract_AST run() throws Exception {
-		Abstract_AST AST = null;
+	public Program run() throws Exception {
+		Program AST = null;
 		
-		acceptIt();
+		this.currentToken = this.tokenQueue.peek();
 		
 		AST = parseProgram();
 		
@@ -177,80 +178,89 @@ public class Parser {
 	}
 	
 	private CommandsList parseCommand() throws Exception {
-		ComposedCommand CC1 = null, CC2;
+		Abstract_Command AC1 = null, AC2;
 		CommandsList CL1 = null, CL2;
 		if (this.currentToken.kind == Token.IDENTIFIER ||
 				this.currentToken.kind == Token.IF ||
 				this.currentToken.kind == Token.WHILE ||
 				this.currentToken.kind == Token.BEGIN) {
-			CC1 = parseSingleCommand();
+			AC1 = parseSingleCommand();
 			accept(Token.SEMICOLON);
 			acceptIt();
 			while (this.currentToken.kind == Token.IDENTIFIER ||
 					this.currentToken.kind == Token.IF ||
 					this.currentToken.kind == Token.WHILE ||
 					this.currentToken.kind == Token.BEGIN) {
-				CC2 = parseSingleCommand();
-				CL1 = new CommandsList(CL1, CC2);
+				AC2 = parseSingleCommand();
+				CL1 = new CommandsList(CL1, AC2);
 				accept(Token.SEMICOLON);
 				acceptIt();
 			}
 		}
-		CL2 = new CommandsList (CL1, CC1);
+		CL2 = new CommandsList (CL1, AC1);
 		return CL2;
 		
 	}
 	
-	private ComposedCommand parseSingleCommand() throws Exception {
-		ComposedCommand CC = null;
+	private Abstract_Command parseSingleCommand() throws Exception {
+		Abstract_Command AC = null;
 		if (currentToken.kind == Token.IDENTIFIER) {
-			parseAttribuition();
+			AC = parseAttribuition();
 		} else if (currentToken.kind == Token.IF) {
-			parseConditional();
+			AC = parseConditional();
 		} else if (currentToken.kind == Token.WHILE) {
-			parseIteration();
+			AC = parseIteration();
 		} else {
-			CC = new ComposedCommand (parseComposedCommand());
+			AC = parseComposedCommand();
 		}
 		
-		return CC;
+		return AC;
 	}
 	
-	private void parseAttribuition() throws Exception {
+	private AssignCommand parseAttribuition() throws Exception {
+		Abstract_Identifier AI = null;
+		Abstract_Expression AE = null;
 		accept(Token.IDENTIFIER);
+		AI = new Identifier(currentToken.spelling);
 		acceptIt();
 		if(currentToken.kind == Token.LBRACKET) {
 			parseArrayPosition();			
 		}
 		accept(Token.ASSIGN);
 		acceptIt();
-		parseExpression();
+		AE = parseExpression();
+		
+		return new AssignCommand(AI, AE);
 	}
 	
 	private IfCommand parseConditional() throws Exception {
 		Abstract_Expression AE1;
-		ComposedCommand CC1, CC2 = null;
+		Abstract_Command AC1, AC2 = null;
 		accept(Token.IF);
 		acceptIt();
 		 AE1 = parseExpression();
 		accept(Token.THEN);
 		acceptIt();
-		CC1 = parseSingleCommand();
+		AC1 = parseSingleCommand();
 		if(currentToken.kind == Token.ELSE) {
 			acceptIt();
-			CC2 = parseSingleCommand();			
+			AC2 = parseSingleCommand();			
 		}
 		
-		return new IfCommand(AE1, CC1, CC2);
+		return new IfCommand(AE1, AC1, AC2);
 	}
 	
-	private void parseIteration() throws Exception {
+	private Abstract_Command parseIteration() throws Exception {
+		Abstract_Command AC = null;
+		Abstract_Expression AE = null;
 		accept(Token.WHILE);
 		acceptIt();
-		parseExpression();
+		AE = parseExpression();
 		accept(Token.DO);
 		acceptIt();
-		parseSingleCommand();
+		AC = parseSingleCommand();
+		
+		return new WhileCommand(AE, AC);
 	}
 	
 	private CommandsList parseComposedCommand() throws Exception {

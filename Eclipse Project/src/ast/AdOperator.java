@@ -6,4 +6,8 @@ public class AdOperator extends Abstract_Operator {
     public AdOperator (String Spelling) {
     	this.Spelling = Spelling;
     }
+    
+    public void visitor(String preTxt) {
+    	System.out.println(preTxt + this.Spelling);
+    }
 }

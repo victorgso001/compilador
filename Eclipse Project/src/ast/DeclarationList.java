@@ -8,4 +8,14 @@ public class DeclarationList extends Abstract_Declaration {
     	this.AD1 = AD1;
     	this.AD2 = AD2;
     }
+    
+    public void visitor(String preTxt) {
+    	if (this.AD2 != null) {
+    		this.AD2.visitor(preTxt + "|");
+    	}
+    	if (this.AD1 != null) {
+    		this.AD1.visitor(preTxt + "|");
+    	}
+    	
+    }
 }

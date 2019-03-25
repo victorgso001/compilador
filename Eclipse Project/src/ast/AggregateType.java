@@ -10,4 +10,12 @@ public class AggregateType extends Abstract_Type {
     	this.AVN2 = AVN2;
     	this.AType = AType;
     }
+    
+    public void visitor (String preTxt) {
+    	System.out.print(preTxt + "[");
+    	this.AVN1.visitor("");
+    	System.out.print("..");
+    	this.AVN2.visitor("");
+    	System.out.print("]");
+    }
 }

@@ -1,11 +1,17 @@
 program teste;
-var int1, int2, intx : integer;
 var real1 : real;
+var int1, int2, intx : integer;
 var arr1 : array [1.. 10 ] of integer;
 begin
 
 int1 := 16;
 int2 := 3;
 intx := int1 * int2 + arr1[2];
+
+while int1 < int2 do
+begin
+int1 := int1 + 1;
+end;
+
 end
 .

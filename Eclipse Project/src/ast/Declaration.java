@@ -8,4 +8,10 @@ public class Declaration extends Abstract_Declaration {
     	this.AI = AI;
     	this.AType = AType;
     }
+    
+    public void visitor(String preTxt) {
+    	this.AI.visitor(preTxt);
+    	this.AType.visitor(preTxt);
+    	System.out.println();
+    }
 }

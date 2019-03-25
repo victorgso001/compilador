@@ -10,4 +10,17 @@ public class SimpleExpression extends Abstract_SimpleExpression {
     	this.ATerm2 = ATerm2;
     	this.AO = AO;
     }
+    
+	public void visitor(String preTxt) {
+		if (this.AO != null) {
+			this.AO.visitor(preTxt);
+    	}
+    	if (this.ATerm1 != null) {
+    		this.ATerm1.visitor(preTxt);
+    	}
+    	if (this.ATerm2 != null) {
+    		this.ATerm2.visitor(preTxt);
+    	}
+    	
+	}
 }

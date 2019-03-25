@@ -8,4 +8,10 @@ public class WhileCommand extends Abstract_Command {
     	this.AE = AE;
     	this.AC = AC;
     }
+    
+    public void visitor(String preTxt) {
+    	System.out.println(preTxt + "while");
+    	this.AE.visitor(preTxt + "|");
+    	this.AC.visitor(preTxt + "|");
+    }
 }

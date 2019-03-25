@@ -8,4 +8,10 @@ public class Program extends Abstract_Program {
     	this.AI = AI;
     	this.AB = AB;
     }
+    
+    public void visitor() {
+    	System.out.println("program");
+    	this.AI.visitor("");
+    	this.AB.visitor("|");
+    }
 }

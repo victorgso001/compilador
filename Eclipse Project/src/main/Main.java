@@ -10,12 +10,13 @@ import analysers.Scanner;
 import analysers.Parser;
 import analysers.Token;
 import ast.Abstract_AST;
+import ast.Program;
 
 
 public class Main {
 	
-	private static String filePath = "C:\\Users\\Victor\\source\\repos\\victorgso001\\compilador\\Result\\code.txt";
-	// private static String filePath = "/home/alisson/univasf/compilador/Result/code.txt";
+	// private static String filePath = "C:\\Users\\Victor\\source\\repos\\victorgso001\\compilador\\Result\\code.txt";
+	private static String filePath = "/home/alisson/univasf/compilador/Result/code.txt";
 	private static Scanner scanner;
 	private static Parser parser;
 
@@ -30,7 +31,9 @@ public class Main {
 			}
 			
 			parser = new Parser(tokenQueue);
-			Abstract_AST ast = parser.run();
+			Program ast = parser.run();
+			
+			ast.visitor();
 
 		} catch (Exception e) {
 	        System.out.printf(e.getMessage());
