@@ -8,4 +8,12 @@ public class Selector extends Abstract_Identifier {
     	this.AI = AI;
     	this.AE = AE;
     }
+    
+    public void visitor(String preTxt) {
+    	this.AI.visitor(preTxt);
+    	System.out.println(preTxt + "[");
+    	this.AE.visitor(preTxt + "|");
+    	System.out.println(preTxt + "]");
+    	
+    }
 }

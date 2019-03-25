@@ -11,6 +11,7 @@ public class AssignCommand extends Abstract_Command {
     
     public void visitor(String preTxt) {
     	this.AI.visitor(preTxt);
+    	System.out.println(preTxt + ":=");
     	this.AE.visitor(preTxt);
     }
 }

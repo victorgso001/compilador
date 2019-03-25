@@ -16,6 +16,7 @@ public class AggregateType extends Abstract_Type {
     	this.AVN1.visitor("");
     	System.out.print("..");
     	this.AVN2.visitor("");
-    	System.out.print("]");
+    	System.out.println("]");
+    	this.AType.visitor(preTxt);
     }
 }

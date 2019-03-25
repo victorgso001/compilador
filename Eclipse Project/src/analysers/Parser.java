@@ -273,21 +273,26 @@ public class Parser {
 		return CC;
 	}
 	
-	private void parseArrayPosition() throws Exception {
+	private Abstract_Expression parseArrayPosition() throws Exception {
+		Abstract_Expression AE = null;
 		acceptIt();
-		parseExpression();
+		AE = parseExpression();
 		accept(Token.RBRACKET);
 		acceptIt();
+		
+		return AE;
 	}
 	
 	private MultipleExpression parseExpression() throws Exception {
 		SimpleExpression SE1, SE2 = null;
+		RelOperator AO = null;
 		SE1 = parseSingleExpression();
 		if(isOpRel()) {
+			AO = new RelOperator(this.currentToken.spelling);
 			acceptIt();
 			SE2 = parseSingleExpression();
 		}
-		return new MultipleExpression(SE1, SE2);
+		return new MultipleExpression(SE1, AO, SE2);
 	}
 	
 	private boolean isOpRel() throws Exception {
@@ -370,14 +375,16 @@ public class Parser {
 	}
 	
 	private Factor parseFactor() throws Exception {
-		Identifier ID1 = null;
+		Abstract_Expression AE = null;
+		Abstract_Identifier ID1 = null;
 		Vname VN1 = null;
 		MultipleExpression ME1 = null;
 		if (this.currentToken.kind == Token.IDENTIFIER) {
 			ID1 = new Identifier(this.currentToken.spelling);
 			acceptIt();
 			if (this.currentToken.kind == Token.LBRACKET) {
-				parseArrayPosition();			
+				AE = parseArrayPosition();
+				ID1 = new Selector(ID1, AE);
 			}
 		} else if (this.currentToken.kind == Token.INTLIT ||
 			this.currentToken.kind == Token.BOOLLIT ||
